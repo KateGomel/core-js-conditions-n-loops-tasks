@@ -293,8 +293,61 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+
+function getNearestBigger(number) {
+  const tempArray = [];
+  for (let n = number; n > 0; n = Math.floor(n / 10)) {
+    const digit = n % 10;
+    tempArray.push(digit);
+  }
+
+  tempArray.reverse();
+
+  let indexReversal;
+  for (
+    indexReversal = tempArray.length - 1;
+    indexReversal > 0;
+    indexReversal -= 1
+  ) {
+    if (tempArray[indexReversal - 1] < tempArray[indexReversal]) {
+      break;
+    }
+  }
+
+  if (!indexReversal) {
+    return number;
+  }
+
+  let indexForSwap;
+  for (
+    indexForSwap = tempArray.length - 1;
+    indexForSwap >= indexReversal;
+    indexForSwap -= 1
+  ) {
+    if (tempArray[indexForSwap] > tempArray[indexReversal - 1]) {
+      break;
+    }
+  }
+
+  const temp = tempArray[indexReversal - 1];
+  tempArray[indexReversal - 1] = tempArray[indexForSwap];
+  tempArray[indexForSwap] = temp;
+
+  const resultArray = [];
+  const arrayForSort = [];
+
+  for (let i = 0; i < indexReversal; i += 1) {
+    resultArray.push(tempArray[i]);
+  }
+
+  for (let j = indexReversal; j < tempArray.length; j += 1) {
+    arrayForSort.push(tempArray[j]);
+  }
+  arrayForSort.sort((a, b) => a - b).forEach((item) => resultArray.push(item));
+
+  const biggerNumber = resultArray.reduce((acc, item) => acc * 10 + item, 0);
+
+  return biggerNumber;
 }
 
 module.exports = {
